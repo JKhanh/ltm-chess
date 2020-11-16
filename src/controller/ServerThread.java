@@ -27,6 +27,7 @@ public class ServerThread implements Runnable{
                 server = new ServerSocket(port);
                 while(!Thread.currentThread().isInterrupted()){
                     client = server.accept();
+                    System.out.println(client.getInetAddress());
                     ServerControl sc = new ServerControl(client);
                     new Thread(sc).start();
                 }

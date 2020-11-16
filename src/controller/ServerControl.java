@@ -33,8 +33,6 @@ public class ServerControl implements Runnable{
         }
     }
     
-    
-    
     @Override
     public void run() {
         try{
@@ -47,10 +45,14 @@ public class ServerControl implements Runnable{
                         Object obj = request.getObject();
                         if(obj instanceof User){
                             User user = (User) obj;
-                            boolean result = userDao.login(user);
-                            response = new Message(result, MessageType.LOGIN);
+                            System.out.println(user.getUsername() + " " + user.getPassword());
+                            Boolean result = userDao.login(user);
+                            System.out.println("Result " + result);
+                            if(result) response = new Message(user, MessageType.LOGIN);
+                            else response = new Message(result, MessageType.LOGIN);
                         } 
                     }
+                    System.out.println(response.getType());
                     oos.writeObject(response);
                 }
                         

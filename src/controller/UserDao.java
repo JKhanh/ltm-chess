@@ -34,7 +34,9 @@ public class UserDao extends Dao{
                 UserStatus status = UserStatus.valueOf(rs.getString("status"));
                 if(status == UserStatus.OFFLINE){
                     updateStatus(user, UserStatus.ONLINE);
+                    user.setStatus(UserStatus.ONLINE);
                 }
+                return true;
             }
         }catch(Exception ex){
             ex.printStackTrace();
