@@ -42,6 +42,6 @@ public class Message implements Serializable{
     }
     
     public enum MessageType{
-        LOGIN, SIGNUP, GETFRIEND, LOADGAME, ENDGAME, REPLAY
+        LOGIN, SIGNUP, GETFRIEND, CHALLENGE, CHALLENGED, LOADGAME, ENDGAME, REPLAY
     }
 }

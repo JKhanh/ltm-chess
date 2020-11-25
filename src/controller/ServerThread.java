@@ -7,33 +7,32 @@ package controller;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  *
  * @author khanh
  */
-public class ServerThread implements Runnable{
-    private ServerSocket server;
-    private int port = 1080;
-    Socket client;
+public class ServerThread{
+    public static ArrayList<ServerControl> clients = new ArrayList<>();
 
     public ServerThread() {
     }
 
-    @Override
-    public void run() {
+    public static void main(String[] args){
         while (true) {            
             try{
-                server = new ServerSocket(port);
+                int port = 1080;
+                ServerSocket server = new ServerSocket(port);
                 while(!Thread.currentThread().isInterrupted()){
-                    client = server.accept();
+                    Socket client = server.accept();
                     System.out.println(client.getInetAddress());
                     ServerControl sc = new ServerControl(client);
+                    clients.add(sc);
                     new Thread(sc).start();
                 }
                 
                 Thread.sleep(100);
-                client.close();
             }catch(Exception ex){
                 ex.printStackTrace();
             }  

@@ -7,6 +7,7 @@ package controller;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import model.User;
 import model.User.UserStatus;
 import model.User.UserType;
@@ -52,9 +53,26 @@ public class UserDao extends Dao{
             ps.setString(1, status.toString());
             ps.setInt(2, user.getId());
             ps.executeUpdate();
+            user.setStatus(status);
         }catch(Exception ex){
             ex.printStackTrace();
         }
+    }
+    
+    public ArrayList<String> listPlayer(){
+        ArrayList<String> players = new ArrayList<>();
+        String query = "SELECT username FROM users WHERE status = 'ONLINE'";
+        try{
+            PreparedStatement ps = conn.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                players.add(rs.getString("username"));
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return players;
     }
     
 }

@@ -16,10 +16,30 @@ public class Board implements Serializable {
     private static final long serialVersionUID = 6529685098267757692L;
     
     private ArrayList<Piece> pieces = new ArrayList();
+    private String whitePlayer;
+    private String blackPlayer;
 
-    public Board() {
+    public Board(String whitePlayer, String blackPlayer) {
+        this.whitePlayer = whitePlayer;
+        this.blackPlayer = blackPlayer;
         generatePiece(Piece.ColorType.WHITE);
         generatePiece(Piece.ColorType.BLACK);
+    }
+
+    public String getWhitePlayer() {
+        return whitePlayer;
+    }
+
+    public void setWhitePlayer(String whitePlayer) {
+        this.whitePlayer = whitePlayer;
+    }
+
+    public String getBlackPlayer() {
+        return blackPlayer;
+    }
+
+    public void setBlackPlayer(String blackPlayer) {
+        this.blackPlayer = blackPlayer;
     }
     
     private void generatePiece(Piece.ColorType color){
