@@ -55,12 +55,18 @@ public class ClientController {
                     case LOGIN:
                         if(message.getObject() instanceof User){
                             User user = (User)message.getObject();
+                            System.out.println("LOGIN");
                             return user.getUserType() == User.UserType.PLAYER;
                         } else return (Boolean) message.getObject();
                     case GETFRIEND:
                         if(message.getObject() instanceof ArrayList){
                             System.out.println("Get some friend");
                             return (ArrayList<String>)message.getObject();
+                        }
+                    case CHALLENGE:
+                        if(message.getObject() instanceof String){
+                            System.out.println("Controller Challege");
+                            return (String) message.getObject();
                         }
                 }
             }

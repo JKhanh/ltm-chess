@@ -31,14 +31,39 @@ public class ListPlayerForm extends javax.swing.JFrame {
         model =(DefaultTableModel)tblPlayer.getModel();
         Message request = new Message(true, Message.MessageType.GETFRIEND);
         controller.sendData(request);
-        Object o = controller.recieveData();
-        if(o instanceof ArrayList){
-            ArrayList<String> players = (ArrayList<String>) o;
-            for(String s: players){
-                Object[] ob = {s};
-                model.addRow(ob);
+        
+        Runnable listenChallenge = new Runnable() {
+            @Override
+            public void run() {
+                while(!Thread.currentThread().isInterrupted()){
+                    Object o = controller.recieveData();
+                    if(o instanceof String){
+                        System.out.println("Some one challege");
+                        String opponent = (String)o ;
+                        Message response = new Message(JOptionPane.showConfirmDialog(null, 
+                                opponent + " want to challege you in a chess game") 
+                                == JOptionPane.YES_OPTION, Message.MessageType.CHALLENGED);
+                        controller.sendData(response);
+                    }
+                    else if(o instanceof Boolean){
+                        System.out.println("Challege response");
+                        Boolean accept = (Boolean) o;
+                        if(accept){
+                            JOptionPane.showMessageDialog(null, " accept your challenge");
+                        }
+                    } else if(o instanceof ArrayList){
+                        System.out.println("GET FRIEND");
+                        ArrayList<String> players = (ArrayList<String>) o;
+                        for(String s: players){
+                            Object[] ob = {s};
+                            model.addRow(ob);
+                        }
+                    }
+                } 
             }
-        }
+        };
+        Thread t = new Thread(listenChallenge);
+        t.start();
     }
 
     /**
@@ -115,15 +140,6 @@ public class ListPlayerForm extends javax.swing.JFrame {
         // TODO add your handling code here:
         Message request = new Message(true, Message.MessageType.GETFRIEND);
         controller.sendData(request);
-        Object o = controller.recieveData();
-        if(o instanceof ArrayList){
-            model.setRowCount(0);
-            ArrayList<String> players = (ArrayList<String>) o;
-            for(String s: players){
-                Object[] ob = {s};
-                model.addRow(ob);
-            }
-        }
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void tblPlayerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPlayerMouseClicked
@@ -131,6 +147,7 @@ public class ListPlayerForm extends javax.swing.JFrame {
         int row = tblPlayer.getSelectedRow();
         String opponent = model.getValueAt(row, 0).toString();
         Message request = new Message(opponent, Message.MessageType.CHALLENGE);
+        controller.sendData(request);
         JOptionPane.showMessageDialog(this, "Challenging " + opponent);
     }//GEN-LAST:event_tblPlayerMouseClicked
 
