@@ -48,31 +48,38 @@ public class ServerControl implements Runnable{
                     Object obj = request.getObject();
                     switch(request.getType()){
                         case LOGIN:
+                            System.out.println("Login");
                             if(obj instanceof User){
                                 User mUser = (User) obj;
-//                                System.out.println(mUser.getUsername() + " " + mUser.getPassword());
                                 Boolean result = userDao.login(mUser);
-                                System.out.println("Result " + result);
                                 user = mUser;
                                 if(result) response = new Message(user, MessageType.LOGIN);
                                 else response = new Message(result, MessageType.LOGIN);
+                                System.out.println(response.getType());
+                                oos.writeObject(response);  
                             } 
                             break;
                         case CHALLENGE:
+                            System.out.println("Challenge");
                             if(obj instanceof String){
                                 String opName = (String) obj;
                                 for(ServerControl sc: ServerThread.clients){
                                     if(opName.equals(sc.user.getUsername())){
                                         opSc = sc;
                                         try{
-                                            ObjectOutputStream objos = new ObjectOutputStream(sc.oos);
-                                            Message m = new Message(user.getUsername(), MessageType.CHALLENGED);
+                                            ObjectOutputStream objos = opSc.oos;
+                                            Message m = new Message(user.getUsername(), MessageType.CHALLENGE);
                                             objos.writeObject(m);
                                         }catch(Exception ex){
                                             ex.printStackTrace();
                                         }
                                     }
                                 }
+                            } else if(obj instanceof Boolean){
+                                Boolean accept = (Boolean) obj;
+                                response = new Message(accept, MessageType.CHALLENGE);
+                                System.out.println(response.getType());
+                                oos.writeObject(response);
                             }
                             break;
                         case LOADGAME:
@@ -87,10 +94,11 @@ public class ServerControl implements Runnable{
                             }
                             players.remove(user.getUsername());
                             response = new Message(players, MessageType.GETFRIEND);
+                            System.out.println(response.getType());
+                            oos.writeObject(response);
                             break;
                     }
-                    System.out.println(response.getType());
-                    oos.writeObject(response);
+                    
                 }
                 Thread.sleep(100);
             }
