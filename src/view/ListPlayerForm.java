@@ -20,6 +20,7 @@ public class ListPlayerForm extends javax.swing.JFrame {
     private User user;
     private ClientController controller;
     DefaultTableModel model;
+    Boolean shutdown = false;
 
     /**
      * Creates new form List
@@ -28,6 +29,7 @@ public class ListPlayerForm extends javax.swing.JFrame {
         initComponents();
         this.user = user;
         this.controller = controller;
+        this.setTitle(user.getUsername() + " client");
         model =(DefaultTableModel)tblPlayer.getModel();
         Message request = new Message(true, Message.MessageType.GETFRIEND);
         controller.sendData(request);
@@ -35,18 +37,35 @@ public class ListPlayerForm extends javax.swing.JFrame {
         Runnable listenChallenge = new Runnable() {
             @Override
             public void run() {
-                while(!Thread.currentThread().isInterrupted()){
+                while(!shutdown){
                     Object o = controller.recieveData();
                     if(o instanceof String){
                         System.out.println("Some one challege");
-                        String opponent = (String)o ;
-                        Message response = new Message(JOptionPane.showConfirmDialog(null, 
+                        String opponent = (String)o;
+                        Message response = new Message();
+                        response.setType(Message.MessageType.CHALLENGE);
+                        Boolean accept = (JOptionPane.showConfirmDialog(null, 
                                 opponent + " want to challege you in a chess game") 
-                                == JOptionPane.YES_OPTION, Message.MessageType.CHALLENGE);
+                                == JOptionPane.YES_OPTION);
+                        response.setObject(accept);
                         controller.sendData(response);
+                        if(accept){
+                            close();
+                            new GameForm(user, controller).setVisible(true);
+                            
+                            System.out.println("interupt list form");
+                        }
+                    }else if(o instanceof Boolean){
+                        System.out.println("Challege response");
+                        Boolean accept = (Boolean) o;
+                        if(accept){
+                            close();
+                            new GameForm(user, controller).setVisible(true);
+                        }
                     } else if(o instanceof ArrayList){
                         System.out.println("GET FRIEND");
                         ArrayList<String> players = (ArrayList<String>) o;
+                        model.setRowCount(0);
                         for(String s: players){
                             Object[] ob = {s};
                             model.addRow(ob);
@@ -141,10 +160,13 @@ public class ListPlayerForm extends javax.swing.JFrame {
         String opponent = model.getValueAt(row, 0).toString();
         Message request = new Message(opponent, Message.MessageType.CHALLENGE);
         controller.sendData(request);
-        
-        new WaitFrom(user, controller).setVisible(true);
     }//GEN-LAST:event_tblPlayerMouseClicked
 
+    void close(){
+        dispose();
+        shutdown = true;
+    }
+    
     /**
      * @param args the command line arguments
      */

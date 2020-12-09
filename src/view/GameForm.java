@@ -7,6 +7,7 @@ package view;
 
 import controller.ClientController;
 import javax.swing.JOptionPane;
+import model.Message;
 import model.User;
 
 /**
@@ -24,6 +25,7 @@ public class GameForm extends javax.swing.JFrame {
         initComponents();
         this.user = user;
         this.controller = controller;
+        this.setTitle(user.getUsername() + " client");
         
         Runnable listenServer = new Runnable() {
             @Override
@@ -58,6 +60,11 @@ public class GameForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnWin.setText("Win");
+        btnWin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnWinActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,6 +85,12 @@ public class GameForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnWinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWinActionPerformed
+        // TODO add your handling code here:
+        Message request = new Message(true, Message.MessageType.ENDGAME);
+        controller.sendData(request);
+    }//GEN-LAST:event_btnWinActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnWin;

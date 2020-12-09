@@ -100,7 +100,7 @@ public class LoginForm extends javax.swing.JFrame {
         Message request = new Message(user, Message.MessageType.LOGIN);
         controller.sendData(request);
         Object response = controller.recieveData();
-        if(response instanceof Boolean){
+        if(response instanceof User){
             System.out.println("Login");
             this.dispose();
             new ListPlayerForm(user, controller).setVisible(true);

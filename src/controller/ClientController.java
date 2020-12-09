@@ -56,7 +56,7 @@ public class ClientController {
                         if(message.getObject() instanceof User){
                             User user = (User)message.getObject();
                             System.out.println("LOGIN");
-                            return user.getUserType() == User.UserType.PLAYER;
+                            return user;
                         } else return (Boolean) message.getObject();
                     case GETFRIEND:
                         if(message.getObject() instanceof ArrayList){
@@ -67,6 +67,10 @@ public class ClientController {
                         if(message.getObject() instanceof String){
                             System.out.println("Controller Challege");
                             return (String) message.getObject();
+                        }
+                        else if(message.getObject() instanceof Boolean){
+                            System.out.println("Controller opponent response");
+                            return (Boolean) message.getObject();
                         }
                     case ENDGAME:
                         if(message.getObject() instanceof Boolean){
