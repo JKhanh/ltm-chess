@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package model.piece;
 
 import java.io.Serializable;
 
@@ -64,5 +64,5 @@ public class Piece implements Serializable {
 
     public void setRow(int row) {
         this.row = row;
-    }  
+    } 
 }

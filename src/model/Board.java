@@ -5,6 +5,7 @@
  */
 package model;
 
+import model.piece.Piece;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class Board implements Serializable {
     private static final long serialVersionUID = 6529685098267757692L;
     
     private ArrayList<Piece> pieces = new ArrayList();
-    
+
     public Board() {
         generatePiece(Piece.ColorType.WHITE);
         generatePiece(Piece.ColorType.BLACK);

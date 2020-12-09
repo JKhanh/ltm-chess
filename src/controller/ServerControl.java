@@ -84,8 +84,6 @@ public class ServerControl implements Runnable{
                             }
                             break;
                         case LOADGAME:
-                            Board board = new Board(user.getUsername(), opSc.user.getUsername());
-                            response = new Message(board, MessageType.LOADGAME);
                             break;
                         case GETFRIEND:
                             System.out.println("GET Friend");
