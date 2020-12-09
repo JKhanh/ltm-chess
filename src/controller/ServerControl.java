@@ -9,6 +9,7 @@ import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import model.Board;
 import model.Message;
@@ -67,22 +68,19 @@ public class ServerControl implements Runnable{
                                 for(ServerControl sc: ServerThread.clients){
                                     if(opName.equals(sc.user.getUsername())){
                                         opSc = sc;
-                                        try{
-                                            objos = opSc.oos;
-                                            opSc.objos = oos;
-                                            Message m = new Message(user.getUsername(), MessageType.CHALLENGE);
-                                            objos.writeObject(m);
-                                        }catch(Exception ex){
-                                            ex.printStackTrace();
-                                        }
+                                        objos = sc.oos;
+                                        sc.objos = oos;
+                                        Message m = new Message(user.getUsername(), MessageType.CHALLENGE);
+                                        objos.writeObject(m);
                                     }
                                 }
                             } else if(obj instanceof Boolean){
                                 System.out.println("Response challege");
                                 Boolean accept = (Boolean) obj;
                                 response = new Message(accept, MessageType.CHALLENGE);
-                                System.out.println(response.getType());
-                                oos.writeObject(response);
+                                System.out.println(response.getObject());
+                                objos.writeObject(response);
+                                System.out.println("Send success");
                             }
                             break;
                         case LOADGAME:
@@ -104,12 +102,13 @@ public class ServerControl implements Runnable{
                             System.out.println("We have a winner");
                             oos.writeObject(new Message(true, MessageType.ENDGAME));
                             objos.writeObject(new Message(false, MessageType.ENDGAME));
+                            break;
                     }
                     
                 }
-                Thread.sleep(100);
+//                Thread.sleep(100);
             }
-        }catch(Exception ex){
+        }catch(EOFException ex){
             ex.printStackTrace();
             try{
                 ois.close();
@@ -119,6 +118,18 @@ public class ServerControl implements Runnable{
             }catch(Exception ex1){
                 ex1.printStackTrace();
             }  
+        } catch(SocketException ex){
+            ex.printStackTrace();
+            try{
+                ois.close();
+                oos.close();
+                client.close();
+                userDao.updateStatus(user, User.UserStatus.OFFLINE);
+            }catch(Exception ex1){
+                ex1.printStackTrace();
+            }  
+        } catch(Exception ex){
+            ex.printStackTrace();
         }
 
     }
