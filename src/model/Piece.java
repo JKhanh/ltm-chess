@@ -33,5 +33,36 @@ public class Piece implements Serializable {
     public enum PieceType{
         KING, QUEEN, ROOK, KNIGHT, BISHOP, PAWN
     }
-    
+
+    public ColorType getColor() {
+        return color;
+    }
+
+    public void setColor(ColorType color) {
+        this.color = color;
+    }
+
+    public PieceType getType() {
+        return type;
+    }
+
+    public void setType(PieceType type) {
+        this.type = type;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }  
 }
