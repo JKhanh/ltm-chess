@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import model.Board;
+import model.Game;
 import model.Message;
 import model.Message.MessageType;
 import model.User;
@@ -23,11 +24,13 @@ import model.User;
 public class ServerControl implements Runnable{
     private Socket client;
     private UserDao userDao = new UserDao();
+    private ResultDao resultDao = new ResultDao();
     private User user = new User();
     private ServerControl opSc;
     ObjectInputStream ois;
     ObjectOutputStream oos;
     ObjectOutputStream objos;
+    boolean isWhite = false;
 
     public ServerControl(Socket client) {
         this.client = client;
@@ -68,6 +71,7 @@ public class ServerControl implements Runnable{
                                 for(ServerControl sc: ServerThread.clients){
                                     if(opName.equals(sc.user.getUsername())){
                                         opSc = sc;
+                                        opSc.opSc = this;
                                         objos = sc.oos;
                                         sc.objos = oos;
                                         Message m = new Message(user.getUsername(), MessageType.CHALLENGE);
@@ -79,6 +83,8 @@ public class ServerControl implements Runnable{
                                 Boolean accept = (Boolean) obj;
                                 response = new Message(accept, MessageType.CHALLENGE);
                                 System.out.println(response.getObject());
+                                isWhite = true;
+                                opSc.isWhite = false;
                                 objos.writeObject(response);
                                 System.out.println("Send success");
                             }
@@ -100,9 +106,16 @@ public class ServerControl implements Runnable{
                             System.out.println("We have a winner");
                             oos.writeObject(new Message(true, MessageType.ENDGAME));
                             objos.writeObject(new Message(false, MessageType.ENDGAME));
+                            Game game;
+                            if(isWhite){
+                                game = new Game(user.getId(), opSc.user.getId(), isWhite);
+                            }
+                            else {
+                                game = new Game(opSc.user.getId(), user.getId(), isWhite);
+                            }
+                            resultDao.addResult(game);
                             break;
                     }
-                    
                 }
 //                Thread.sleep(100);
             }
@@ -123,6 +136,7 @@ public class ServerControl implements Runnable{
                 oos.close();
                 client.close();
                 userDao.updateStatus(user, User.UserStatus.OFFLINE);
+                ServerThread.clients.remove(this);
             }catch(Exception ex1){
                 ex1.printStackTrace();
             }  
