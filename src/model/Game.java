@@ -13,32 +13,33 @@ import java.io.Serializable;
  */
 public class Game implements Serializable{
     
-    private String whitePlayer;
-    private String blackPlayer;
+    private int whitePlayer;
+    private int blackPlayer;
     private boolean isWhiteWin;
 
     public Game() {
         
     }
 
-    public Game(String whitePlayer, String blackPlayer) {
+    public Game(int whitePlayer, int blackPlayer, boolean isWhiteWin) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
+        this.isWhiteWin = isWhiteWin;
     }
-    
-    public String getWhitePlayer() {
+
+    public int getWhitePlayer() {
         return whitePlayer;
     }
 
-    public void setWhitePlayer(String whitePlayer) {
+    public void setWhitePlayer(int whitePlayer) {
         this.whitePlayer = whitePlayer;
     }
 
-    public String getBlackPlayer() {
+    public int getBlackPlayer() {
         return blackPlayer;
     }
 
-    public void setBlackPlayer(String blackPlayer) {
+    public void setBlackPlayer(int blackPlayer) {
         this.blackPlayer = blackPlayer;
     }
 
