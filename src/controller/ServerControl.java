@@ -26,6 +26,7 @@ public class ServerControl implements Runnable{
     private ServerControl opSc;
     ObjectInputStream ois;
     ObjectOutputStream oos;
+    ObjectOutputStream objos;
 
     public ServerControl(Socket client) {
         this.client = client;
@@ -67,7 +68,8 @@ public class ServerControl implements Runnable{
                                     if(opName.equals(sc.user.getUsername())){
                                         opSc = sc;
                                         try{
-                                            ObjectOutputStream objos = opSc.oos;
+                                            objos = opSc.oos;
+                                            opSc.objos = oos;
                                             Message m = new Message(user.getUsername(), MessageType.CHALLENGE);
                                             objos.writeObject(m);
                                         }catch(Exception ex){
@@ -76,6 +78,7 @@ public class ServerControl implements Runnable{
                                     }
                                 }
                             } else if(obj instanceof Boolean){
+                                System.out.println("Response challege");
                                 Boolean accept = (Boolean) obj;
                                 response = new Message(accept, MessageType.CHALLENGE);
                                 System.out.println(response.getType());
@@ -97,6 +100,10 @@ public class ServerControl implements Runnable{
                             System.out.println(response.getType());
                             oos.writeObject(response);
                             break;
+                        case ENDGAME:
+                            System.out.println("We have a winner");
+                            oos.writeObject(new Message(true, MessageType.ENDGAME));
+                            objos.writeObject(new Message(false, MessageType.ENDGAME));
                     }
                     
                 }
