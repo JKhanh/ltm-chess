@@ -42,15 +42,8 @@ public class ListPlayerForm extends javax.swing.JFrame {
                         String opponent = (String)o ;
                         Message response = new Message(JOptionPane.showConfirmDialog(null, 
                                 opponent + " want to challege you in a chess game") 
-                                == JOptionPane.YES_OPTION, Message.MessageType.CHALLENGED);
+                                == JOptionPane.YES_OPTION, Message.MessageType.CHALLENGE);
                         controller.sendData(response);
-                    }
-                    else if(o instanceof Boolean){
-                        System.out.println("Challege response");
-                        Boolean accept = (Boolean) o;
-                        if(accept){
-                            JOptionPane.showMessageDialog(null, " accept your challenge");
-                        }
                     } else if(o instanceof ArrayList){
                         System.out.println("GET FRIEND");
                         ArrayList<String> players = (ArrayList<String>) o;
@@ -148,7 +141,8 @@ public class ListPlayerForm extends javax.swing.JFrame {
         String opponent = model.getValueAt(row, 0).toString();
         Message request = new Message(opponent, Message.MessageType.CHALLENGE);
         controller.sendData(request);
-        JOptionPane.showMessageDialog(this, "Challenging " + opponent);
+        
+        new WaitFrom(user, controller).setVisible(true);
     }//GEN-LAST:event_tblPlayerMouseClicked
 
     /**

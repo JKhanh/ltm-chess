@@ -68,6 +68,11 @@ public class ClientController {
                             System.out.println("Controller Challege");
                             return (String) message.getObject();
                         }
+                    case ENDGAME:
+                        if(message.getObject() instanceof Boolean){
+                            System.out.println("We have a winner");
+                            return (Boolean) message.getObject();
+                        }
                 }
             }
         }catch(Exception ex){
