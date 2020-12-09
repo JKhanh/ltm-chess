@@ -5,6 +5,7 @@
  */
 package model;
 
+import model.piece.Piece;
 import java.io.Serializable;
 import java.util.ArrayList;
 
