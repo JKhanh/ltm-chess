@@ -36,7 +36,7 @@ public class GameForm extends javax.swing.JFrame {
                         Boolean isWinner = (Boolean) o;
                         if(isWinner) 
                             JOptionPane.showMessageDialog(rootPane, "You are the winner");
-                        else JOptionPane.showMessageDialog(rootPane, "You are the fucking loser");
+                        else JOptionPane.showMessageDialog(rootPane, "Better next time");
                     }
                 }
             }
